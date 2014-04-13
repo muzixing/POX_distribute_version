@@ -1,7 +1,9 @@
 import socket
 import thread
 import logging
-from pox.messenger import ofpew as ofpew
+from pox.messenger import lib_ewbridge as ofpew
+from pox.messenger import  OpenFlow_EWbridge as ew_handler
+
 """
 Author: muzi
 Date: 2014/4/12
@@ -20,7 +22,7 @@ def socket_handler(socket,(remoteHost,remotePort)):
   if len(data)<8:
       print "not a openflow ewbridge message"
   else:
-      msg = ewbridge.msg_handler(data)   #handle the data received.
+      msg = str(ew_handler.msg_handler(data))   #handle the data received.
       if len(msg)>0:
           socket.send(msg)
 
@@ -29,10 +31,10 @@ def distributed_server(port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
     s.bind(('0.0.0.0',port))
-    s.listen(100)
+    s.listen(16)
     while True:
       logging.getLogger("boot run TCP server").debug("Server running")
-      print ("Server starting ")
+      print ("\n *****Server starting ******\n")
       fd,(remoteHost, remotePort) = s.accept()
 
       print ("%s:%s connected" %(remoteHost,remotePort))
@@ -45,21 +47,28 @@ def distributed_client(server_ip,server_port):
     sock.setblocking(1)
     sock.connect((server_ip,server_port))
     #we need to change it into ofpew,send hello to the server and start the communication.
+
+    print "\n***** Client Starting*****\n"
     msg = ofpew.ofpew_header(type = 0,length = 8)
 
-    sock.send(msg)# say hello to server controller.
+    sock.send(str(msg)) # say hello to server controller.
 
     while 1:
         data = sock.recv(1024)
         if data =="":
-          print ("Receive nothing")
+            #print ("Receive nothing")
+            pass
         else:
             if len(data)<8:
                 print "not a openflow ewbridge message"
             else:
-              	msg = ewbridge.msg_handler(data)   #handle the data received.
-      			if len(msg)>=8:
-	          		socket.send(msg)            
+              	msg = str(ew_handler.msg_handler(data))   #handle the data received.
+                if len(msg)>=8:
+                    sock.send(msg)
+        echo_request = str(ew_handler.send_echo_handler())  #send echo request priodic.
+        if len(echo_request)==8:
+            sock.send(echo_request)
+
 
 if __name__ == "__main__":
     print "Build the connection between two POX"

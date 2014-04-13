@@ -71,7 +71,7 @@ ofpew_version = {	0: "1.0",
 					4: "1.4",
 				}
 
-ofpew_is_edge = {	0: "nomal",
+ofpew_is_edge = {	0: "Normal",
 					1: "is_edge",
 				}
 
@@ -100,7 +100,7 @@ class ofpew_header(Packet):
 #length =12bytes.
 class ofpew_error_msg(Packet):
     name = "OpenFlow_EWbridge Error Message"
-    fields_desc=[ ShortEnumField("type", 0, ofp_error_type),
+    fields_desc=[ ShortEnumField("type", 0, ofpew_error_type),
                   ShortField("code", 0),                       #need to parse with type field, use another function
                   StrFixedLenField("data", None, length=8)]
 bind_layers( ofpew_header, ofpew_error_msg, type=1 )
