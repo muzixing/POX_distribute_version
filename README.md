@@ -37,4 +37,4 @@ You need to copy the communication.py ,lib_ewbridge.py and OpenFlow_EWbridge.py 
 Start a POX as server controller,and set IP/PORT information of server's information in client controller.
 Just make sure that make a socket connection between them.
 
-Start the Cient controller(POX).
+Start the Client controller(POX).
