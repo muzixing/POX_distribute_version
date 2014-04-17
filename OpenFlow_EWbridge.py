@@ -20,9 +20,11 @@ flow_paths = {}
 
 def update_handler(data):
     #manipulate the messenge
+    header = ofpew.ofpew_header(data[0:8])
+    data = data[8:]
     print "update_handler"
-    update_msg = ofpew.ofpew_update(data[0:4])
-    data = data[4:]                  
+    update_msg = ofpew.ofpew_update(data[0:8])
+    data = data[8:]                  
     for x in xrange(update_msg.network_number):
         offset = 0
         network_view = ofpew.ofpew_network_view(data[0:16])
@@ -87,9 +89,9 @@ def refresh_handler(data):
     port_number = 4
     link_number = 1
     flow_path_number = 1
-    length = len(ofpew.ofpew_header())+len(ofpew.ofpew_update())+len(ofpew.ofpew_network_view())*network_number\
-            /+len(ofpew.ofpew_node())*node_number+len(ofpew.ofpew_port())*port_number\
-            /+len(ofpew.ofpew_link())*link_number+len(ofpew.ofpew_flow_path())*flow_path_number
+    length = len(ofpew.ofpew_header())+len(ofpew.ofpew_update())+len(ofpew.ofpew_network_view())*network_number
+            +len(ofpew.ofpew_node())*node_number+len(ofpew.ofpew_port())*port_number
+            +len(ofpew.ofpew_link())*link_number+len(ofpew.ofpew_flow_path())*flow_path_number
 
     update_msg = ofpew.ofpew_update(network_number = network_number)
     network_msg = ofpew.ofpew_network_view(node_number = node_number, port_number = port_number,

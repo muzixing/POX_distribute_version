@@ -215,7 +215,7 @@ class ofpew_link(Packet):
 					]			
 #length =60bytes.
 class ofpew_flow_path(Packet):
-	name = "OpenFlow_EWbridge link"
+	name = "OpenFlow_EWbridge flow_path"
 	fields_desc = [	BitField('flow_path_id', 0, 64),
 					ByteEnumField("type", 0 , ofpew_entity_type),
 					X3BytesField("pad", 0), #padding for 32bits.
